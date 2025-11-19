@@ -1,0 +1,58 @@
+.dados-duplicados{
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.form1-dup{
+    background-color: rgb(247, 247, 247);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+    width: 50%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-single-dup{
+    border: solid 2px rgb(202, 202, 202);
+    border-style: dashed;
+    border-radius: 8px;
+    width: 50%;
+    height: 20vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.submit-button-dup{
+    padding: 10px;
+    color: var(--cor-primaria);
+}
+
+.submit-button-dup button{
+    background-color: var(--cor-primaria);
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+}
+
+.submit-button-dup button:hover{
+    background-color: var(--cor-primaria2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.input-single-dup input{
+    padding: 5px;
+}
+
+.headers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* espaçamento entre as opções */
+}

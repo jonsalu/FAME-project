@@ -1,0 +1,50 @@
+.home{
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100vw;
+    height: 76vh;
+}
+
+.container-services{
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.9)
+}
+
+.services-grid{
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(2,1fr);
+    width: 100vh;
+    color: black;
+    gap: 8px;
+    
+}
+
+.services-grid a{
+    text-decoration: none;
+    color: inherit; /* use the parent's color */
+}
+
+.services-grid a:hover{
+    text-decoration: none;
+    /* optional: change color on hover */
+    color: var(--cor-primaria);
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+}
+
+.card-service-option{
+    background-color: white;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+}

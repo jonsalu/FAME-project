@@ -1,0 +1,54 @@
+.info-ui{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: normal;
+}
+
+.instrucoes-ui{
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px;
+    width: 80%;
+}
+
+.info-ui-step{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.info-ui-step img{
+    align-items: center;
+}
+
+.info-ui-step img{
+    height: 250px;
+    display: block;
+    margin: 0 auto;
+    
+}
+
+
+
+.informacoes-importantes-ui{
+    background-color:  rgb(243, 243, 203);
+    border-radius: 8px;
+    padding: 3px;
+    margin-top: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.informacoes-importantes-ui h4{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+

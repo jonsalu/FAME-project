@@ -1,0 +1,81 @@
+.uniao-inteligente{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+.form1-ui{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    min-height: 100vh;
+    background-color: rgb(247, 247, 247);
+    border-radius: 8px;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+}
+
+.form-inputs-ui{
+    display: flex;
+    height: 100%;
+    gap: 10px
+}
+
+.input-single-ui{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: solid 2px rgb(202, 202, 202);
+    border-style: dashed;
+    border-radius: 8px;
+    height: 30vh;
+}
+
+.cloud-icon{
+    color: rgb(230, 230, 230);
+    height: 90%;
+    display: flex;
+    align-items: center;
+}
+
+.input-single-ui input{
+    padding:5px;
+
+}
+
+.submit-button-ui{
+    padding: 10px;
+    
+}
+
+.submit-button-ui button{
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--cor-primaria);
+    color: white;
+    border: none;
+}
+
+.submit-button-ui button:hover{
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+    background-color: var(--cor-primaria2);
+    transition: 0.3s;
+}
+
+#obs{
+    font-size: smaller;
+}
+
+.voltar-btn{
+    
+ margin-right: auto;
+ padding: 10px;
+
+}
+
