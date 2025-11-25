@@ -18,8 +18,10 @@ html, body{
   width: 100%;
   overflow-x: hidden;
   font-family: "Poppins", sans-serif;
-  background-image: url("../public/background-fame.png");
+  background-color: rgb(240, 240, 240);
 }
+
+
 
 
 

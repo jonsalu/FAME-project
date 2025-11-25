@@ -1,50 +1,80 @@
 .home{
-    align-items: center;
+    width: 100%;
+    height: 75vh;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100vw;
-    height: 76vh;
+    align-items: center;
 }
 
-.container-services{
+.grid-services{
+    margin-top: 20px;
+}
+
+.card-service{
     background-color: white;
-    padding: 20px;
+    width: 15%;
+    height: 50vh;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    background-color: rgba(255, 255, 255, 0.9)
-}
-
-.services-grid{
-    display: grid;
-    align-items: center;
-    grid-template-columns: repeat(2,1fr);
-    width: 100vh;
-    color: black;
-    gap: 8px;
-    
-}
-
-.services-grid a{
-    text-decoration: none;
-    color: inherit; /* use the parent's color */
-}
-
-.services-grid a:hover{
-    text-decoration: none;
-    /* optional: change color on hover */
-    color: var(--cor-primaria);
-    transition: 0.3s;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
-}
-
-.card-service-option{
-    background-color: white;
-    align-items: center;
+    margin: 20px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 5%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
+    align-items: center;
 }
+
+.card-service p{
+    font-size: small;
+    height: 20%;
+}
+
+.card-service h4{
+    font-weight: 500;
+}
+
+.btn-link-home{
+    width: 50%;
+    border-radius: 15px;
+    border: none;
+    padding: 8px;
+    background-color: var(--cor-primaria);
+    color: white;
+    margin-top: 10px;
+    display: flex;              /* permite centralizar */
+    justify-content: center;    /* centra horizontal */
+    align-items: center;        /* centra vertical */
+    background: #001A72;
+    color: white;
+    font-size: small;
+    text-decoration: none;      
+}
+
+
+
+.btn-link-home:hover{
+    background-color: var(--cor-secundaria);
+    transition: 0.2s;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+}
+
+.card-service a{
+
+}
+
+.card-title{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    height: 40%;
+}
+
+.linha-1-home{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+

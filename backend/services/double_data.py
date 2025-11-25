@@ -3,6 +3,7 @@ from openpyxl.styles import PatternFill
 from io import BytesIO
 import zipfile
 import io
+import datetime
 
 # 🧹 Funções auxiliares seguras
 def normalize_text(v):
@@ -12,7 +13,7 @@ def normalize_text(v):
     return str(v).strip().upper()
 
 
-async def handleDoubleData(file, columns_to_check=None):
+async def handleDoubleData(file, columns_to_check=None, modo="download"):
     print("➡️ Columns to check recebidas:", columns_to_check)
 
     # Carrega a planilha
@@ -78,6 +79,35 @@ async def handleDoubleData(file, columns_to_check=None):
     for rows in combinations.values():
         if len(rows) > 1:
             duplicate_rows.update(rows)
+
+    
+    #adicionando funcao de preview, depois do return dela a função inteira para
+    if modo == "preview":
+        preview_list = []
+
+        for row in sorted(duplicate_rows):
+            row_data = {}
+
+            for col in range(1, sheet.max_column + 1):
+                header = sheet.cell(row=1, column=col).value
+                value = sheet.cell(row=row, column=col).value
+
+                # 🔥 Convertendo tudo para tipos JSON-safe
+                if isinstance(value, datetime.datetime):
+                    value = value.isoformat()
+                elif isinstance(value, (datetime.date, datetime.time)):
+                    value = str(value)
+                elif value is None:
+                    value = None
+                else:
+                    value = value if isinstance(value, (int, float, bool, str)) else str(value)
+
+                row_data[header] = value
+
+            preview_list.append(row_data)
+
+        workbook.close()
+        return preview_list
 
     # -------------------------------------------------------
     # 🔶 MARCAR LINHA INTEIRA (todas as colunas)

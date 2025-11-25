@@ -5,6 +5,7 @@ import { PiMicrosoftExcelLogo } from "react-icons/pi";
 import { PiWarningBold } from "react-icons/pi";
 import { FaGears } from "react-icons/fa6";
 import { FaFileDownload } from "react-icons/fa";
+import BackBtn from "../button/backbtn";
 
 
 
@@ -15,7 +16,7 @@ const InfoComparador = () => {
 
         <div className="info-comparador">
             <div className="instrucoes-comparador">
-                <h3>Como usar o comparador de planilhas</h3>
+                <h3><BackBtn/> Como usar o comparador de planilhas</h3>
                 <div className="info-comp-step">
                     <p>1. Pré-tratamento</p>
                     <img src="../../public/comp-screen-print-step-2.png" alt="" />

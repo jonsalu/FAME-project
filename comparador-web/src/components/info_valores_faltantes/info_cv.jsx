@@ -1,11 +1,12 @@
 import React from "react";
 import './info_cv.css'
+import BackBtn from "../button/backbtn";
 
 const InfoCelulasVazias = () => {
     return(
          <div className="info-cv">
             <div className="instrucoes-cv">
-                <h3>Como usar o detector de valores faltantes</h3>
+                <h3><BackBtn/>Como usar o detector de valores faltantes</h3>
                 <div className="info-cv-step">
                     <p>1. Anexar a planilha em formato .xlsx</p>
                     <img src="../../public/cv-screen-print-step-1.png" alt="" />
@@ -32,7 +33,7 @@ const InfoCelulasVazias = () => {
                     <p>4. Receber o resultado</p>
                     <img src="../../public/cv-screen-print-step-4.png" alt="" />
                     <div className="info-cv-step-desc">
-                        <p>Ao final da análise, o programa geraá automaticamente um arquivo .zip. Esse arquivo conterá uma nova planilha com todas as linhas que possuem valores faltantes devidamente destacadas.</p>
+                        <p>Ao final da análise, o programa gerará automaticamente um arquivo .zip. Esse arquivo conterá uma nova planilha com todas as linhas que possuem valores faltantes devidamente destacadas.</p>
                     </div>
                 </div>
 

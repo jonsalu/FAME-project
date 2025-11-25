@@ -10,7 +10,7 @@
     background-color: rgb(247, 247, 247);
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
-    width: 50%;
+    width: 70%;
     
     display: flex;
     flex-direction: column;
@@ -34,6 +34,7 @@
     padding: 10px;
     border-radius: 8px;
     color: white;
+    margin: 4px;
 }
 
 .submit-button-cv button:hover{
@@ -49,4 +50,24 @@
 
 .input-single-cv input{
     padding: 5px;
+}
+
+.preview-container-cv {
+  width: 95%;
+  max-width: 100%;
+  height: 400px;        /* pode ajustar como quiser */
+  overflow-x: auto;     /* scroll horizontal */
+  overflow-y: auto;     /* scroll vertical */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+    font-size: 0.8rem; /* menor */
+
+    margin-top: 10px;
+}
+
+.preview-container-cv table td,
+.preview-container-cv table th {
+  padding: 10px 12px;   /* aumenta espaço interno */
 }

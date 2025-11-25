@@ -1,12 +1,14 @@
 import React from "react";
 import "./info_uniao_inteligente.css"
 import { PiWarningBold } from "react-icons/pi";
+import BackBtn from "../button/backbtn";
+
 
 const InfoUniaoInteligente = () => {
     return(
         <div className="info-ui">
             <div className="instrucoes-ui">
-                <h3>Como usar a ferramenta de união inteligente</h3>
+                <h3><BackBtn/>Como usar a ferramenta de união inteligente</h3>
                 <div className="info-ui-step">
                     <p>1. Anexar as planilhas em formato .xlsx</p>
                     <img src="../../public/ui-screen-print-step-1.png" alt="" />

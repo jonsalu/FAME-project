@@ -1,12 +1,13 @@
 import React from "react";
 import './info_duplicatas.css'
 import { PiWarningBold } from "react-icons/pi";
+import BackBtn from "../button/backbtn";
 
 const InfoDuplicatas = () => {
     return(
         <div className="info-duplicatas">
             <div className="instrucoes-duplicatas">
-                <h3>Como usar o detector de duplicatas</h3>
+                <h3><BackBtn/>Como usar o detector de duplicatas</h3>
                 <div className="info-duplicatas-step">
                     <p>1. Anexar a planilha em formato .xlsx</p>
                     <img src="../../public/cv-screen-print-step-1.png" alt="" />
@@ -38,6 +39,17 @@ const InfoDuplicatas = () => {
                     <img src="../../public/duplicata-screen-img-step-4.png" alt="" />
                     <div className="info-duplicatas-step-desc">
                         <p>Ao final da análise, o programa gerará automaticamente um arquivo .zip. Esse arquivo conterá uma nova planilha com todas as linhas duplicadas devidamente marcadas.</p>
+                    </div>
+                </div>
+                <div className="info-duplicatas-step">
+                    <p>5. visualização do preview</p>
+                    <img src="../../public/cv-screen-print-step-5.png" alt="" />
+                    <div className="info-duplicatas-step-desc">
+                        <p>Ao clicar na função preview, será mostrado abaixo dos cabeçalhos uma lista apenas com as linhas com dados duplicados encontrados.</p>
+                        <div className="warn-info-duplicatas-step-1">
+                            <PiWarningBold style={{ color: "#e9c600ff" }} size={20} />
+                            <p>A função preview não é recomendada para planilhas grandes (&lt; 300 linhas).</p>
+                        </div>
                     </div>
                 </div>
 

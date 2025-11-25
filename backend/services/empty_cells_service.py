@@ -1,83 +1,112 @@
-import pandas as pd
-import openpyxl
+from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
-from fastapi import UploadFile
-from typing import List
-import io
+from io import BytesIO
 import zipfile
-
-FILL_VERMELHO = PatternFill(start_color="FFFF0000", end_color= "FFFF0000", fill_type="solid")
-
-
-
-import pandas as pd
-import openpyxl
-from openpyxl.styles import PatternFill
-# IMPORTANTE: Importar o UploadFile do FastAPI
-from fastapi import UploadFile 
-from typing import List
 import io
-import zipfile
+import datetime
 
-# 1. Definição da Cor de Marcação
-FILL_AMARELO = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+# Reutilizando sua função auxiliar (mantenha ela no escopo)
+def normalize_text(v):
+    if v is None:
+        return ""
+    return str(v).strip().upper()
 
-# 2. Corrigir a definição da função para ser assíncrona (async def)
-async def processAndMarkMissing(file: UploadFile, colunas_obrigatorias: List[str]) -> bytes:
-    """
-    Processa o arquivo Excel, identifica linhas com células vazias nas 
-    colunas obrigatórias e marca a linha inteira. Retorna o arquivo zipado em bytes.
-    """
-    
-    # 1. Leitura do Arquivo e Preparação (Pandas)
-    
-    # Le o conteúdo do arquivo EM MEMÓRIA (AWAIT É NECESSÁRIO)
-    conteudo_arquivo = await file.read() 
-    arquivo_bytes_io = io.BytesIO(conteudo_arquivo)
-    
-    # ... O resto do código (Lógica Pandas/Openpyxl) ...
+async def processAndMarkMissing(file, columns_to_check=None, modo="download"):
+    print(f"➡️ Buscando vazios. Modo: {modo}")
 
-    # Carrega o arquivo para um DataFrame do Pandas
-    df = pd.read_excel(arquivo_bytes_io)
+    # 1. Carrega a planilha (Exatamente igual ao seu código anterior)
+    contents = await file.read()
+    workbook = load_workbook(BytesIO(contents))
+    sheet = workbook.active
 
-    # 2. Lógica de Detecção de Linhas Incompletas
-    
-    # Filtra o DataFrame apenas com as colunas obrigatórias
-    df_filtrado = df[colunas_obrigatorias]
-    
-    # Verifica quais linhas possuem pelo menos um valor vazio (True = incompleta)
-    linhas_incompletas = df_filtrado.isnull().any(axis=1)
-    
-    # Extrai os índices do Pandas (começando em 0) para as linhas incompletas
-    indices_para_marcar = df.index[linhas_incompletas].tolist()
-    
-    # 3. Formatação e Gravação (Openpyxl)
-    
-    # Carrega a pasta de trabalho novamente (Openpyxl precisa do arquivo original)
-    # IMPORTANTE: Rebobinar o buffer para que o openpyxl o leia
-    arquivo_bytes_io.seek(0)
-    wb = openpyxl.load_workbook(arquivo_bytes_io)
-    ws = wb.active # Pega a planilha ativa
-    
-    # Itera sobre os índices e marca a linha no Excel
-    for pandas_index in indices_para_marcar:
-        linha_excel = pandas_index + 2 
-        for cell in ws[linha_excel]:
-            cell.fill = FILL_VERMELHO
-            
-    # Salva o arquivo modificado em um novo buffer de memória
-    arquivo_saida_io = io.BytesIO()
-    wb.save(arquivo_saida_io)
-    arquivo_saida_io.seek(0) # Volta o ponteiro para o início para leitura
-    
-    # 4. Zippando o Arquivo (Para garantir o StreamingResponse)
-    
-    nome_saida = f"incompletas_marcadas_{file.filename}"
-    zip_buffer = io.BytesIO()
-    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr(nome_saida, arquivo_saida_io.read())
+    # Se não vier nenhuma coluna, usa todas ou a primeira (regra de negócio sua)
+    # Aqui vou assumir que se não vier, checa todas
+    if not columns_to_check:
+        columns_to_check = [sheet.cell(row=1, column=c).value for c in range(1, sheet.max_column + 1)]
+
+    # 2. Cor de destaque (Vermelho para erro)
+    vermelho = PatternFill(start_color="FFFF0000", end_color="FFFF0000", fill_type="solid")
+
+    # 3. Mapeia cabeçalhos (Igual ao seu código)
+    header_map = {}
+    for col in range(1, sheet.max_column + 1):
+        header_value = normalize_text(sheet.cell(row=1, column=col).value)
+        header_map[header_value] = col
+
+    # Converte nomes para índices
+    col_indexes = []
+    for col_name in columns_to_check:
+        norm = normalize_text(col_name)
+        if norm in header_map:
+            col_indexes.append(header_map[norm])
+
+    if not col_indexes:
+        workbook.close()
+        raise ValueError("Nenhum dos cabeçalhos selecionados foi encontrado.")
+
+    # -------------------------------------------------------
+    # 🔥 LÓGICA DE DETECÇÃO (A única parte que muda de verdade)
+    # -------------------------------------------------------
+    missing_rows = set()
+
+    for i in range(2, sheet.max_row + 1):
+        # Verifica se ALGUMA das colunas selecionadas está vazia nesta linha
+        is_row_missing = False
+        for col_idx in col_indexes:
+            val = sheet.cell(row=i, column=col_idx).value
+            # Considera vazio se for None ou string vazia/espaços
+            if val is None or str(val).strip() == "":
+                is_row_missing = True
+                break # Se achou um vazio na linha, já marca e pula para a próxima lógica
         
+        if is_row_missing:
+            missing_rows.add(i)
+
+    # -------------------------------------------------------
+    # 👁️ MODO PREVIEW (Cópia exata da sua lógica de duplicados)
+    # -------------------------------------------------------
+    if modo == "preview":
+        preview_list = []
+
+        # Ordena para mostrar na ordem que aparecem no Excel
+        for row in sorted(missing_rows):
+            row_data = {}
+
+            for col in range(1, sheet.max_column + 1):
+                header = sheet.cell(row=1, column=col).value
+                value = sheet.cell(row=row, column=col).value
+
+                # 🔥 Convertendo tudo para tipos JSON-safe (Sua lógica segura)
+                if isinstance(value, datetime.datetime):
+                    value = value.isoformat()
+                elif isinstance(value, (datetime.date, datetime.time)):
+                    value = str(value)
+                elif value is None:
+                    value = None
+                else:
+                    value = value if isinstance(value, (int, float, bool, str)) else str(value)
+
+                row_data[header] = value
+
+            preview_list.append(row_data)
+
+        workbook.close()
+        return preview_list # Retorna Lista de Dicts (JSON)
+
+    # -------------------------------------------------------
+    # ⬇️ MODO DOWNLOAD (Pinta e baixa)
+    # -------------------------------------------------------
+    for row in missing_rows:
+        for col in range(1, sheet.max_column + 1):
+            sheet.cell(row=row, column=col).fill = vermelho
+
+    output = io.BytesIO()
+    workbook.save(output)
+    workbook.close()
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+        zipf.writestr("linhas_vazias_marcadas.xlsx", output.getvalue())
+
     zip_buffer.seek(0)
-    
-    # Retorna o conteúdo do ZIP como bytes
-    return zip_buffer.read()
+    return zip_buffer.getvalue() # Retorna Bytes
