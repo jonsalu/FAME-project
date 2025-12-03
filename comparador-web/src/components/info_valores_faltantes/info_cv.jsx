@@ -36,6 +36,13 @@ const InfoCelulasVazias = () => {
                         <p>Ao final da análise, o programa gerará automaticamente um arquivo .zip. Esse arquivo conterá uma nova planilha com todas as linhas que possuem valores faltantes devidamente destacadas.</p>
                     </div>
                 </div>
+                <div className="info-cv-step">
+                    <p>4. Visualizando o preview</p>
+                    <img src="../../public/cv-screen-print-step-6.png" alt="" />
+                    <div className="info-cv-step-desc">
+                        <p>Ao clicar no botão "preview", será mostrado abaixo dos cabeçalhos uma lista apenas com as linhas onde foram encontrados dados ausentes.</p>
+                    </div>
+                </div>
 
                 <div className="informacoes-importantes-cv">
                     <h4> Informações importantes!</h4>

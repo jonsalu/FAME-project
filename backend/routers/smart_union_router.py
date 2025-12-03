@@ -1,7 +1,6 @@
-# router_uniao.py
 from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import JSONResponse, FileResponse
-from backend.services.smart_union_service import UniaoService
+from backend.services.smart_union_service import UniaoService # Ajuste o import conforme sua pasta real
 
 router = APIRouter()
 
@@ -22,20 +21,27 @@ async def uniao_cabecalhos(file1: UploadFile = File(...)):
 async def uniao_inteligente(
     file1: UploadFile = File(...),
     file2: UploadFile = File(...),
-    common_header: str = Form(...)
+    common_header: str = Form(...),
+    apenas_preview: bool = Form(False) # Nova flag
 ):
     try:
-        zip_path = UniaoService.unir_planilhas(
+        resultado = UniaoService.unir_planilhas(
             file1.file,
             file2.file,
-            common_header
+            common_header,
+            preview=apenas_preview
         )
 
-        return FileResponse(
-            zip_path,
-            media_type="application/zip",
-            filename="uniao_resultado.zip"
-        )
+        if apenas_preview:
+            # Retorna JSON
+            return JSONResponse(content=resultado)
+        else:
+            # Retorna Arquivo (resultado é uma string path aqui)
+            return FileResponse(
+                resultado,
+                media_type="application/zip",
+                filename="uniao_resultado.zip"
+            )
 
     except Exception as e:
         return JSONResponse(

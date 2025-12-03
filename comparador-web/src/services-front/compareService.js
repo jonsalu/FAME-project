@@ -1,7 +1,8 @@
-export async function compararPlanilhas(file1, file2) {
+export async function compararPlanilhas(file1, file2, modo = "download") {
   const formData = new FormData();
   formData.append("file1", file1);
   formData.append("file2", file2);
+  formData.append("mode", modo); // <<< chave enviada ao backend
 
   const response = await fetch("http://localhost:8000/api/compare/", {
     method: "POST",
@@ -13,12 +14,18 @@ export async function compararPlanilhas(file1, file2) {
     throw new Error(`Erro na API: ${response.status} - ${errorText}`);
   }
 
-  const blob = await response.blob();
+  // -------------------------------------------------
+  // 🔍 Detecta se veio JSON (preview) ou ZIP (download)
+  // -------------------------------------------------
+  const contentType = response.headers.get("content-type");
 
-  // Verifica se é realmente um ZIP
-  if (blob.type !== "application/zip") {
-    throw new Error("Resposta não é um arquivo ZIP válido.");
+  if (contentType && contentType.includes("application/json")) {
+    // Preview → JSON
+    const json = await response.json();
+    return { tipo: "preview", data: json };
   }
 
-  return blob;
+  // Download → ZIP
+  const blob = await response.blob();
+  return { tipo: "download", data: blob };
 }

@@ -1,100 +1,122 @@
-# backend/services/compare_service.py
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
-from io import BytesIO
 import zipfile
 import io
+import datetime
 
-# Normalização simples e segura
+# --- Helpers de Normalização ---
 def normalize(value):
-    if value is None:
-        return ""
+    if value is None: return ""
+    if isinstance(value, (int, float)) and value == int(value): value = int(value)
     return str(value).strip().upper()
 
+def sanitize(value):
+    if isinstance(value, (datetime.date, datetime.datetime)): return value.isoformat()
+    return value if value is not None else ""
 
-def process_and_mark(b1: bytes, b2: bytes):
-    # Agora SEMPRE comparamos as 3 primeiras colunas
-    compare_columns = [1, 2, 3]
-
-    bio1 = io.BytesIO(b1)
-    bio2 = io.BytesIO(b2)
-    wb1 = load_workbook(bio1)
-    wb2 = load_workbook(bio2)
+# --- FUNÇÃO ÚNICA DE COMPARAÇÃO ---
+async def comparar_planilhas(file1, file2, modo="download"):
+    # 1. Carregar arquivos em memória
+    b1 = await file1.read()
+    b2 = await file2.read()
+    
+    wb1 = load_workbook(io.BytesIO(b1))
+    wb2 = load_workbook(io.BytesIO(b2))
     sheet1 = wb1.active
     sheet2 = wb2.active
 
+    # Estilos
     verde = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")
     vermelho = PatternFill(start_color="F08080", end_color="F08080", fill_type="solid")
 
-    # -------------------------
-    # Índice da segunda planilha
-    # -------------------------
+    # 2. Configurar Colunas (Dinâmico: pega o max de colunas das duas)
+    max_col = max(sheet1.max_column, sheet2.max_column)
+    cols = list(range(1, max_col + 1))
+
+    # 3. Indexar Planilha 2 para busca rápida
+    # Mapeia: Conteúdo da Linha -> Lista de índices onde ela aparece na Planilha 2
     index2 = {}
-    for row in range(2, sheet2.max_row + 1):  # ignora header
-        key = tuple(normalize(sheet2.cell(row=row, column=c).value) for c in compare_columns)
-        index2.setdefault(key, []).append(row)
+    for r in range(2, sheet2.max_row + 1):
+        key = tuple(normalize(sheet2.cell(row=r, column=c).value) for c in cols)
+        index2.setdefault(key, []).append(r)
 
-    matched_in_sheet2 = set()
+    # Conjunto para rastrear quais linhas da Planilha 2 foram "casadas"
+    matched_rows_sheet2 = set()
+    
+    preview_data = [] # Lista final do JSON
 
-    # -------------------------
-    # Comparação planilha 1 → 2
-    # -------------------------
-    for row in range(2, sheet1.max_row + 1):
-        key = tuple(normalize(sheet1.cell(row=row, column=c).value) for c in compare_columns)
+    # ---------------------------------------------------------
+    # 4. PROCESSAR PLANILHA 1 (Completa)
+    # ---------------------------------------------------------
+    for r in range(2, sheet1.max_row + 1):
+        key = tuple(normalize(sheet1.cell(row=r, column=c).value) for c in cols)
+        
+        # Busca match na P2
         match_rows = index2.get(key, [])
-
+        
+        status = "vermelho"
         if match_rows:
-            # match encontrado → pinta verde somente as colunas comparadas
-            for c in compare_columns:
-                sheet1.cell(row=row, column=c).fill = verde
+            status = "verde"
+            # Consome o primeiro par disponível da P2 para evitar duplicidade
+            r2 = match_rows.pop(0)
+            matched_rows_sheet2.add(r2) # Marca que a linha r2 da planilha 2 teve par
 
-            # pega a primeira correspondência da planilha 2
-            row2 = match_rows.pop(0)
-            matched_in_sheet2.add(row2)
+        # Ações (Pintar + JSON)
+        fill = verde if status == "verde" else vermelho
+        
+        # Pinta P1
+        for c in cols:
+            sheet1.cell(row=r, column=c).fill = fill
 
-            for c in compare_columns:
-                sheet2.cell(row=row2, column=c).fill = verde
+        # Adiciona ao JSON (Se for preview)
+        if modo == "preview":
+            row_json = {"origem": "PLANILHA_1", "campos": {}}
+            for c in cols:
+                header = str(sheet1.cell(row=1, column=c).value or f"C{c}")
+                val = sanitize(sheet1.cell(row=r, column=c).value)
+                row_json["campos"][header] = {"valor": val, "status": status}
+            preview_data.append(row_json)
 
-        else:
-            # sem match → pinta vermelho
-            for c in compare_columns:
-                sheet1.cell(row=row, column=c).fill = vermelho
+    # ---------------------------------------------------------
+    # 5. PROCESSAR PLANILHA 2 (Completa)
+    # ---------------------------------------------------------
+    # Agora iteramos a P2 inteira para gerar o JSON completo dela também
+    for r in range(2, sheet2.max_row + 1):
+        
+        # Se a linha 'r' estiver no set matched_rows_sheet2, ela deu match (Verde)
+        # Se não estiver, ela sobrou (Vermelho)
+        status = "verde" if r in matched_rows_sheet2 else "vermelho"
+        fill = verde if status == "verde" else vermelho
 
-    # -------------------------
-    # Marcar não comparados na planilha 2
-    # -------------------------
-    for row in range(2, sheet2.max_row + 1):
-        if row not in matched_in_sheet2:
-            for c in compare_columns:
-                sheet2.cell(row=row, column=c).fill = vermelho
+        # Pinta P2
+        for c in cols:
+            sheet2.cell(row=r, column=c).fill = fill
+            
+        # Adiciona ao JSON (Se for preview)
+        if modo == "preview":
+            row_json = {"origem": "PLANILHA_2", "campos": {}}
+            for c in cols:
+                header = str(sheet2.cell(row=1, column=c).value or f"C{c}")
+                val = sanitize(sheet2.cell(row=r, column=c).value)
+                row_json["campos"][header] = {"valor": val, "status": status}
+            preview_data.append(row_json)
 
-    # -------------------------
-    # Exportar resultados
-    # -------------------------
+    # ---------------------------------------------------------
+    # 6. RETORNO (Decisão Unificada)
+    # ---------------------------------------------------------
+    if modo == "preview":
+        return {"dados": preview_data}
+
+    # Gera ZIP se for download
     out1 = io.BytesIO()
     out2 = io.BytesIO()
     wb1.save(out1)
     wb2.save(out2)
-    wb1.close()
-    wb2.close()
-
-    out1.seek(0)
-    out2.seek(0)
-    return out1.read(), out2.read()
-
-
-# Função chamada pelo router
-async def comparar_planilhas(file1, file2):
-    b1 = await file1.read()
-    b2 = await file2.read()
-
-    processed1, processed2 = process_and_mark(b1, b2)
-
-    zip_io = io.BytesIO()
-
-    with zipfile.ZipFile(zip_io, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr(f"{file1.filename.rsplit('.', 1)[0]}_resultado.xlsx", processed1)
-        z.writestr(f"{file2.filename.rsplit('.', 1)[0]}_resultado.xlsx", processed2)
-
-    zip_io.seek(0)
-    return zip_io.read()
+    
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("planilha_base_verificada.xlsx", out1.getvalue())
+        z.writestr("planilha_nova_verificada.xlsx", out2.getvalue())
+    
+    zip_buffer.seek(0)
+    return zip_buffer

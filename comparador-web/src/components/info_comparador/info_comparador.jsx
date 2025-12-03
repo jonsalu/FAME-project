@@ -11,6 +11,7 @@ import BackBtn from "../button/backbtn";
 
 
 
+
 const InfoComparador = () => {
     return(
 
@@ -50,6 +51,17 @@ const InfoComparador = () => {
                         <p>Logo após a comparação, será feito um download com duas cópias das planilhas anexadas com as devidas marcações. O download é automático e os arquivos virão comprimidos numa pasta .zip.</p>
                     </div>
                 </div>
+                <div className="info-comp-step">
+                    <p>5. Visualização do preview</p>
+                    <img src="../../public/comp-screen-img-step-5.png" alt="" />
+                    <div className="info-comp-step-desc">
+                         <p>Ao clicar na função preview, será mostrado abaixo duas planilhas coloridas de acordo com a comparação.</p>
+                                                <div className="warn-info-duplicatas-step-1">
+                                                    <PiWarningBold style={{ color: "#e9c600ff" }} size={20} />
+                                                    <p>A função preview não é recomendada para planilhas grandes (&lt; 300 linhas).</p>
+                                                </div>
+                                                </div>
+                </div>
 
                 <div className="informacoes-importantes-comp">
                     <h4><PiWarningBold style={{ color: "#e9c600ff" }} size={20} /> Informações importantes!</h4>
@@ -57,15 +69,15 @@ const InfoComparador = () => {
                         
                         <li>As planilhas devem estar no formato .xlsx (Excel).</li>
                         <li>Cada arquivo deve conter <strong>apenas uma aba principal</strong>(a primeira será usada na comparação).</li>
-                        <li>As colunas que serão comparadas precisam estar <strong>na mesma estrutura em abmas as planilhas.</strong></li>
+                        <li>As colunas que serão comparadas precisam estar <strong>na mesma estrutura em ambas as planilhas.</strong></li>
                         <li>Coloque a planilha menor (menos linhas) no campo da <strong>esquerda</strong>.</li>
                         <li>Números são comparados diretamente como texto simples.
                         Portanto, certifique-se de que o formato numérico esteja consistente entre as planilhas.</li>
-                        <li>Textos são comparados sem considerar maiúscilas/minúsculas ou espaços extras.</li>
+                        <li>Textos são comparados sem considerar maiúsculas/minúsculas ou espaços extras.</li>
                         <li>Evite valores mistos (números com letras no mesmo campo).</li>
                         <li>O programa considera que a primeira linha é o cabeçalho, a comparação começa a partir da segunda linha.</li>
                         <li>Não altere as planilhas durante o upload.</li>
-                        <li>O comparador é uma ferrameta de apoio, e não garante 100% de assertividade em casos de planilhas com formatos muito inconsistentes.</li>
+                        <li>O comparador é uma ferramenta de apoio, e não garante 100% de assertividade em casos de planilhas com formatos muito inconsistentes.</li>
                     </ul>
                 </div>
                 

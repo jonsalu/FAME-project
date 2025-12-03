@@ -4,7 +4,7 @@ import './footer.css'
 const Footer = () => {
     return(
         <div className="footer">
-            <p>FAME - Ferramenta de Auxílio em Manipulação de Excel V1.0 - 2025 - Jonathan Salustiano</p>
+            <p>FAME - Ferramenta de Auxílio em Manipulação de Excel V1.1 - 2025 - Jonathan Salustiano</p>
         </div>
     )
 }

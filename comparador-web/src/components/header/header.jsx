@@ -66,7 +66,7 @@ const Header = () => {
           >
             <DropdownMenu.Item asChild>
               <Link to="/info-comparador" style={itemStyle}>
-                Comparador
+                Compararar planilhas
               </Link>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
