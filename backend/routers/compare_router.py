@@ -9,11 +9,11 @@ router = APIRouter(prefix="/compare", tags=["Comparação"])
 async def comparar(
     file1: UploadFile = File(...),
     file2: UploadFile = File(...),
-    mode: str = Form("download") 
+    modo: str = Form("download") 
 ):
     try:
         # Chama a função unificada
-        resultado = await comparar_planilhas(file1, file2, modo=mode)
+        resultado = await comparar_planilhas(file1, file2, modo=modo)
 
         # SE FOR DICIONÁRIO -> É PREVIEW (JSON)
         if isinstance(resultado, dict):

@@ -2,7 +2,7 @@ export async function compararPlanilhas(file1, file2, modo = "download") {
   const formData = new FormData();
   formData.append("file1", file1);
   formData.append("file2", file2);
-  formData.append("mode", modo); // <<< chave enviada ao backend
+  formData.append("modo", modo); // <<< chave enviada ao backend
 
   const response = await fetch("http://localhost:8000/api/compare/", {
     method: "POST",
