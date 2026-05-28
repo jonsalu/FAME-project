@@ -16,23 +16,13 @@ const Header = () => {
   return (
     <div className="header">
       <div className="logo-header">
-        <img
-          src="https://redeprimavera.com.br/wp-content/uploads/2024/04/cropped-Nova-Logo.png"
-          alt=""
-        />
-        <p>
-          <strong>
-            REDE
-            <br />
-            PRIMAVERA
-            <br />
-            SAÚDE
-          </strong>
-        </p>
+        
+          <img src="/logosuperoficial.png" alt="Logo" />
+        
       </div>
 
       <Link to="/">
-        <h1>FAME</h1>
+        <h1>Glosa Zero</h1>
       </Link>
 
       <div className="nav-bar">

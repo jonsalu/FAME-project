@@ -19,3 +19,5 @@ run no back: cd "y:\Publico\jonathan t.i\projetos\comparadorweb"
 & ".\.venv\Scripts\Activate.ps1"
 uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-level info
 
+uvicorn main:app --reload --host 0.0.0.0 --port 8000 --log-level info
+

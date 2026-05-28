@@ -5,7 +5,7 @@ export async function handleCelulasVazias (file, selectedHeaders, mode = "downlo
     formData.append('selected_headers',JSON.stringify (selectedHeaders))
     formData.append('mode', mode)
 
-    const response = await fetch("http://localhost:8000/api/celulas-vazias",{
+    const response = await fetch("http://localhost:8000/api/celulas-vazias/",{
         method: 'POST',
         body: formData
     })

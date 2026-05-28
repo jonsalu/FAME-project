@@ -3,6 +3,8 @@
     height: 75vh;
     display: flex;
     align-items: center;
+    
+    
 }
 
 .grid-services{
@@ -10,17 +12,26 @@
 }
 
 .card-service{
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.603);
     width: 15%;
     height: 50vh;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.30);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.50);
     margin: 20px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: 0.2s;
+}
+
+.card-service:hover{
+    background-color: rgba(255, 255, 255, 0.803);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.80);
+    transition: 0.2s;
+    
+    transform: translateY(-12px);
 }
 
 .card-service p{

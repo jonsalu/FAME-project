@@ -5,21 +5,44 @@
   --cor-primaria: #001A72;
   --cor-primaria2: #203c97;
   --cor-secundaria: #f4af23;
+  
 }
 
 
 
 
 
-html, body{
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   overflow-x: hidden;
   font-family: "Poppins", sans-serif;
-  background-color: rgb(240, 240, 240);
+  position: relative;
+  min-height: 100vh;
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-image: url('/noseufundo.jpeg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  filter: blur(8px);
+  opacity: 0.9;
+}
+
+
+
+
 
 
 

@@ -1,17 +1,19 @@
 .header{
     display: flex;
     justify-content: space-around;
-    background-color: var(--cor-primaria);
+    background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    color: white;
-    height: 10vh;
+    color: var(--cor-primaria);
+    height: 15vh;
     align-items: center;
     margin-bottom: 10px;
-    font-family: "Poppins", sans-serif
+    font-family: "Poppins", sans-serif;
+    
+    
 }
 
 .header h1{
-    font-weight: 400;
+    font-weight: 550;
 }
 
 .logo-header{
@@ -39,5 +41,5 @@
 }
 
 img{
-    height: 40px;
+    height: 90px;
 }

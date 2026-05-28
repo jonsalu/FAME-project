@@ -8,7 +8,7 @@ export async function handleDuplicateData(file1, selectedHeaders, modo) {
     console.log("📋 Colunas selecionadas:", selectedHeaders);
     console.log("Modo:", modo)
 
-    const response = await fetch("http://localhost:8000/api/double-data", {
+    const response = await fetch("http://localhost:8000/api/double-data/", {
         method: "POST",
         body: formData,
     });
